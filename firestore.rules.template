@@ -1,0 +1,42 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() &&
+        request.auth.token.email_verified == true &&
+        request.auth.token.email == '__ADMIN_EMAIL__';
+    }
+
+    function hasViewerAccess() {
+      let accessPath = /databases/$(database)/documents/settings/access;
+      let accessExists = exists(accessPath);
+      let accessDoc = get(accessPath);
+      return isAdmin() ||
+        (isSignedIn() && (
+          !accessExists ||
+          !('allowedViewerEmails' in accessDoc.data) ||
+          accessDoc.data.allowedViewerEmails.size() == 0 ||
+          request.auth.token.email in accessDoc.data.allowedViewerEmails
+        ));
+    }
+
+    match /settings/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    match /series/{seriesId} {
+      allow read: if hasViewerAccess();
+      allow create, update, delete: if isAdmin();
+
+      match /videos/{videoId} {
+        allow read: if hasViewerAccess();
+        allow create, update, delete: if isAdmin();
+      }
+    }
+  }
+}
