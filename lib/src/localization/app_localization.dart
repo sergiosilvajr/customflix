@@ -119,6 +119,15 @@ class AppStrings {
   String get editSeries => isPtBr ? 'Editar série' : 'Edit series';
   String get deleteSeriesTooltip =>
       isPtBr ? 'Excluir série' : 'Delete series';
+  String get resyncSeries => isPtBr ? 'Ressincronizar' : 'Resync';
+  String get resyncSeriesTooltip =>
+      isPtBr ? 'Ressincronizar série' : 'Resync series';
+  String get seriesResyncRequested => isPtBr
+      ? 'Ressincronização solicitada. O backend vai processar a série novamente.'
+      : 'Resync requested. The backend will process the series again.';
+  String resyncSeriesError(Object error) => isPtBr
+      ? 'Erro ao solicitar ressincronização: $error'
+      : 'Failed to request resync: $error';
   String syncStatus(String status, String error) => isPtBr
       ? 'Status: $status${error.isEmpty ? '' : ' | $error'}'
       : 'Status: $status${error.isEmpty ? '' : ' | $error'}';
@@ -155,6 +164,14 @@ class AppStrings {
   String get videoThumbField => isPtBr
       ? 'Thumbnail do vídeo (opcional; se vazio, mantém a sincronizada)'
       : 'Video thumbnail (optional; if empty, keeps the synced one)';
+  String get thumbnailStatusLabel =>
+      isPtBr ? 'Thumbnail' : 'Thumbnail';
+  String get thumbnailReadyStorage =>
+      isPtBr ? 'pronta no Storage' : 'ready in Storage';
+  String get thumbnailExternalSource =>
+      isPtBr ? 'link externo' : 'external link';
+  String get thumbnailMissing =>
+      isPtBr ? 'ausente' : 'missing';
   String get requiredField =>
       isPtBr ? 'Campo obrigatório' : 'Required field';
   String get validNumber =>

@@ -113,6 +113,15 @@ class CatalogRepository {
     await batch.commit();
   }
 
+  Future<void> requestSeriesResync(String seriesId) async {
+    await _seriesRef.doc(seriesId).set({
+      'syncRequestedAt': FieldValue.serverTimestamp(),
+      'syncStatus': 'pending',
+      'syncError': FieldValue.delete(),
+      'updatedAt': FieldValue.serverTimestamp(),
+    }, SetOptions(merge: true));
+  }
+
   Future<void> addAllowedViewerEmail(String email) async {
     await _accessSettingsRef.set({
       'allowedViewerEmails': FieldValue.arrayUnion([email]),
@@ -128,12 +137,31 @@ class CatalogRepository {
   }
 
   int _compareVideos(VideoItem a, VideoItem b) {
+    final aSortKey = a.sortKey.trim();
+    final bSortKey = b.sortKey.trim();
+    if (aSortKey.isNotEmpty || bSortKey.isNotEmpty) {
+      final bySortKey = aSortKey.compareTo(bSortKey);
+      if (bySortKey != 0) {
+        return bySortKey;
+      }
+    }
+
+    final bySeason = a.seasonNumber.compareTo(b.seasonNumber);
+    if (bySeason != 0) {
+      return bySeason;
+    }
+
     final aOrder = _extractEpisodeOrder(a.title, a.episodeNumber);
     final bOrder = _extractEpisodeOrder(b.title, b.episodeNumber);
 
     final byOrder = aOrder.compareTo(bOrder);
     if (byOrder != 0) {
       return byOrder;
+    }
+
+    final byPart = a.partNumber.compareTo(b.partNumber);
+    if (byPart != 0) {
+      return byPart;
     }
 
     final byTitle = a.title.toLowerCase().compareTo(b.title.toLowerCase());

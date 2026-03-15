@@ -27,6 +27,7 @@ class _AdminPageState extends State<AdminPage> {
   bool _savingSeries = false;
   bool _savingViewerEmail = false;
   String? _deletingSeriesId;
+  String? _resyncingSeriesId;
 
   @override
   void dispose() {
@@ -170,6 +171,30 @@ class _AdminPageState extends State<AdminPage> {
     } finally {
       if (mounted) {
         setState(() => _deletingSeriesId = null);
+      }
+    }
+  }
+
+  Future<void> _requestSeriesResync(SeriesItem series) async {
+    setState(() => _resyncingSeriesId = series.id);
+    try {
+      await CatalogRepository.instance.requestSeriesResync(series.id);
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.strings.seriesResyncRequested)),
+      );
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.strings.resyncSeriesError(e))),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _resyncingSeriesId = null);
       }
     }
   }
@@ -415,6 +440,7 @@ class _AdminPageState extends State<AdminPage> {
 
   Widget _buildSeriesCard(SeriesItem series) {
     final isDeleting = _deletingSeriesId == series.id;
+    final isResyncing = _resyncingSeriesId == series.id;
     final strings = context.strings;
 
     return Card(
@@ -432,6 +458,20 @@ class _AdminPageState extends State<AdminPage> {
             FilledButton.tonal(
               onPressed: isDeleting ? null : () => _populateSeriesForm(series),
               child: Text(strings.editSeries),
+            ),
+            const SizedBox(width: 8),
+            IconButton(
+              onPressed: isDeleting || isResyncing
+                  ? null
+                  : () => _requestSeriesResync(series),
+              tooltip: strings.resyncSeriesTooltip,
+              icon: isResyncing
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.sync),
             ),
             const SizedBox(width: 8),
             IconButton(
@@ -487,12 +527,20 @@ class _AdminPageState extends State<AdminPage> {
                           child: Text(video.episodeNumber.toString()),
                         ),
                         title: Text(video.title),
-                        subtitle: Text(
-                          video.description.isEmpty
-                              ? video.driveFileUrl
-                              : video.description,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              video.description.isEmpty
+                                  ? video.driveFileUrl
+                                  : video.description,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            const SizedBox(height: 6),
+                            _ThumbnailStatusChip(video: video),
+                          ],
                         ),
                         trailing: TextButton(
                           onPressed: () => _populateVideoForm(series.id, video),
@@ -549,6 +597,57 @@ class _SyncInfoCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Text(
           context.strings.syncInfo,
+        ),
+      ),
+    );
+  }
+}
+
+class _ThumbnailStatusChip extends StatelessWidget {
+  const _ThumbnailStatusChip({required this.video});
+
+  final VideoItem video;
+
+  @override
+  Widget build(BuildContext context) {
+    final strings = context.strings;
+    final thumbnailUrl = video.thumbnailUrl.trim();
+
+    final bool isStorageThumbnail =
+        thumbnailUrl.contains('firebasestorage.googleapis.com') ||
+        thumbnailUrl.contains('.firebasestorage.app');
+    final bool hasThumbnail = thumbnailUrl.isNotEmpty;
+
+    late final String label;
+    late final Color backgroundColor;
+    late final Color foregroundColor;
+
+    if (isStorageThumbnail) {
+      label = '${strings.thumbnailStatusLabel}: ${strings.thumbnailReadyStorage}';
+      backgroundColor = const Color(0x1F2E7D32);
+      foregroundColor = const Color(0xFF81C784);
+    } else if (hasThumbnail) {
+      label = '${strings.thumbnailStatusLabel}: ${strings.thumbnailExternalSource}';
+      backgroundColor = const Color(0x1FFF8F00);
+      foregroundColor = const Color(0xFFFFD54F);
+    } else {
+      label = '${strings.thumbnailStatusLabel}: ${strings.thumbnailMissing}';
+      backgroundColor = const Color(0x1FC62828);
+      foregroundColor = const Color(0xFFEF9A9A);
+    }
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: foregroundColor,
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
         ),
       ),
     );
