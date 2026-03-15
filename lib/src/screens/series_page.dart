@@ -6,13 +6,21 @@ import '../localization/app_localization.dart';
 import '../models/series_item.dart';
 import '../models/video_item.dart';
 import '../repositories/catalog_repository.dart';
+import '../widgets/catalog_layout_toggle.dart';
 import '../widgets/catalog_thumbnail.dart';
 import 'player_page.dart';
 
-class SeriesPage extends StatelessWidget {
+class SeriesPage extends StatefulWidget {
   const SeriesPage({super.key, required this.series});
 
   final SeriesItem series;
+
+  @override
+  State<SeriesPage> createState() => _SeriesPageState();
+}
+
+class _SeriesPageState extends State<SeriesPage> {
+  CatalogLayoutMode _layoutMode = CatalogLayoutMode.grid;
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +29,9 @@ class SeriesPage extends StatelessWidget {
     final strings = context.strings;
 
     return Scaffold(
-      appBar: AppBar(title: Text(series.title)),
+      appBar: AppBar(title: Text(widget.series.title)),
       body: StreamBuilder<List<VideoItem>>(
-        stream: CatalogRepository.instance.watchVideos(series.id),
+        stream: CatalogRepository.instance.watchVideos(widget.series.id),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -34,20 +42,35 @@ class SeriesPage extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             children: [
               Text(
-                series.description,
+                widget.series.description,
                 style: const TextStyle(color: Colors.white70),
               ),
-              if (isAdmin && series.driveFolderUrl.isNotEmpty) ...[
+              if (isAdmin && widget.series.driveFolderUrl.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 SelectableText(
-                  '${strings.driveFolderLabel}: ${series.driveFolderUrl}',
+                  '${strings.driveFolderLabel}: ${widget.series.driveFolderUrl}',
                   style: const TextStyle(color: Colors.white54, fontSize: 12),
                 ),
               ],
               const SizedBox(height: 18),
-              Text(
-                strings.episodes,
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Text(
+                      strings.episodes,
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  CatalogLayoutToggle(
+                    value: _layoutMode,
+                    onChanged: (value) => setState(() => _layoutMode = value),
+                  ),
+                ],
               ),
               const SizedBox(height: 12),
               if (videos.isEmpty)
@@ -57,7 +80,7 @@ class SeriesPage extends StatelessWidget {
                     child: Text(strings.noVideosInSeries),
                   ),
                 ),
-              if (videos.isNotEmpty)
+              if (videos.isNotEmpty && _layoutMode == CatalogLayoutMode.grid)
                 LayoutBuilder(
                   builder: (context, constraints) {
                     final width = constraints.maxWidth;
@@ -82,14 +105,133 @@ class SeriesPage extends StatelessWidget {
                       ),
                       itemBuilder: (context, index) {
                         final video = videos[index];
-                        return _EpisodeCard(series: series, video: video);
+                        return _EpisodeCard(series: widget.series, video: video);
                       },
                     );
                   },
                 ),
+              if (videos.isNotEmpty && _layoutMode == CatalogLayoutMode.list)
+                Column(
+                  children: videos
+                      .map(
+                        (video) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: _EpisodeListCard(
+                            series: widget.series,
+                            video: video,
+                          ),
+                        ),
+                      )
+                      .toList(),
+                ),
             ],
           );
         },
+      ),
+    );
+  }
+}
+
+class _EpisodeListCard extends StatelessWidget {
+  const _EpisodeListCard({required this.series, required this.video});
+
+  final SeriesItem series;
+  final VideoItem video;
+
+  @override
+  Widget build(BuildContext context) {
+    final strings = context.strings;
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final isCompact = screenWidth < 720;
+
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => PlayerPage(series: series, video: video),
+          ),
+        );
+      },
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        child: SizedBox(
+          height: isCompact ? 140 : 156,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(
+                width: isCompact ? 150 : 260,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CatalogThumbnail(
+                      imageUrl: video.thumbnailUrl,
+                      emptyIcon: Icons.ondemand_video,
+                    ),
+                    Positioned(
+                      top: 10,
+                      left: 10,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.72),
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                        child: Text(
+                          'EP ${video.episodeNumber}',
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        video.title,
+                        maxLines: isCompact ? 2 : 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 17,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Expanded(
+                        child: Text(
+                          video.description.isEmpty
+                              ? strings.noDescription
+                              : video.description,
+                          maxLines: isCompact ? 3 : 4,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(color: Colors.white70),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Icon(Icons.play_circle_fill_rounded, size: 22),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -160,6 +160,9 @@ class AppStrings {
   String get validNumber =>
       isPtBr ? 'Informe um número válido' : 'Enter a valid number';
   String get languageLabel => isPtBr ? 'Idioma' : 'Language';
+  String get viewModeLabel => isPtBr ? 'Visualização' : 'View mode';
+  String get gridViewLabel => isPtBr ? 'Grade' : 'Grid';
+  String get listViewLabel => isPtBr ? 'Lista' : 'List';
   String get portugueseLabel => 'PT-BR';
   String get englishLabel => 'EN';
   String get viewerAccessTitle =>
