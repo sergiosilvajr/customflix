@@ -5,6 +5,7 @@ import '../auth/auth_service.dart';
 import '../localization/app_localization.dart';
 import '../models/series_item.dart';
 import '../repositories/catalog_repository.dart';
+import '../widgets/catalog_layout_toggle.dart';
 import '../widgets/catalog_thumbnail.dart';
 import 'admin_page.dart';
 import 'series_page.dart';
@@ -23,6 +24,7 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _searchCtrl = TextEditingController();
   final FocusNode _searchFocusNode = FocusNode();
   final ValueNotifier<String> _queryNotifier = ValueNotifier<String>('');
+  CatalogLayoutMode _layoutMode = CatalogLayoutMode.grid;
 
   @override
   void dispose() {
@@ -76,6 +78,11 @@ class _HomePageState extends State<HomePage> {
             Text(
               strings.seriesTitle,
               style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: 12),
+            CatalogLayoutToggle(
+              value: _layoutMode,
+              onChanged: (value) => setState(() => _layoutMode = value),
             ),
             const SizedBox(height: 12),
             ValueListenableBuilder<String>(
@@ -142,6 +149,16 @@ class _HomePageState extends State<HomePage> {
                               ),
                             ),
                           ],
+                        );
+                      }
+
+                      if (_layoutMode == CatalogLayoutMode.list) {
+                        return ListView.separated(
+                          itemCount: filteredSeries.length,
+                          separatorBuilder: (_, _) => const SizedBox(height: 12),
+                          itemBuilder: (context, index) {
+                            return _SeriesListCard(series: filteredSeries[index]);
+                          },
                         );
                       }
 
@@ -221,6 +238,72 @@ class _SeriesCard extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SeriesListCard extends StatelessWidget {
+  const _SeriesListCard({required this.series});
+
+  final SeriesItem series;
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.sizeOf(context).width;
+    final isCompact = screenWidth < 700;
+
+    return InkWell(
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (_) => SeriesPage(series: series)),
+        );
+      },
+      child: Card(
+        clipBehavior: Clip.antiAlias,
+        child: SizedBox(
+          height: isCompact ? 132 : 148,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(
+                width: isCompact ? 144 : 240,
+                child: CatalogThumbnail(
+                  imageUrl: series.thumbnailUrl,
+                  emptyIcon: Icons.movie,
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        series.title,
+                        maxLines: isCompact ? 2 : 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Expanded(
+                        child: Text(
+                          series.description,
+                          maxLines: isCompact ? 3 : 4,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(color: Colors.white70),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
