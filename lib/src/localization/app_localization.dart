@@ -46,149 +46,149 @@ class AppStrings {
   String get appTitle => 'CustomFlix';
   String get admin => isPtBr ? 'Admin' : 'Admin';
   String get logoutFallback => isPtBr ? 'Sair' : 'Sign out';
-  String get seriesTitle => isPtBr ? 'Series' : 'Series';
+  String get seriesTitle => isPtBr ? 'Séries' : 'Series';
   String get searchSeriesHint => isPtBr
-      ? 'Buscar serie por titulo ou descricao'
+      ? 'Buscar série por título ou descrição'
       : 'Search series by title or description';
   String get noSeriesYet =>
-      isPtBr ? 'Nenhuma serie cadastrada ainda.' : 'No series added yet.';
+      isPtBr ? 'Nenhuma série cadastrada ainda.' : 'No series added yet.';
   String noSeriesFound(String query) => isPtBr
-      ? 'Nenhuma serie encontrada para "$query".'
+      ? 'Nenhuma série encontrada para "$query".'
       : 'No series found for "$query".';
   String get signInIntro => isPtBr
-      ? 'Entre com sua conta Google para assistir. A area administrativa e restrita ao email autorizado.'
+      ? 'Entre com sua conta Google para assistir. A área administrativa é restrita ao e-mail autorizado.'
       : 'Sign in with your Google account to watch. The admin area is restricted to the authorized email.';
   String get signInWithGoogle =>
       isPtBr ? 'Entrar com Google' : 'Continue with Google';
   String get signingIn => isPtBr ? 'Entrando...' : 'Signing in...';
   String signInError(Object error) =>
       isPtBr ? 'Falha no login Google: $error' : 'Google sign-in failed: $error';
-  String get episodes => isPtBr ? 'Episodios' : 'Episodes';
+  String get episodes => isPtBr ? 'Episódios' : 'Episodes';
   String get noVideosInSeries => isPtBr
-      ? 'Sem videos cadastrados para esta serie.'
+      ? 'Sem vídeos cadastrados para esta série.'
       : 'No videos have been added to this series yet.';
   String get noDescription =>
-      isPtBr ? 'Sem descricao.' : 'No description.';
+      isPtBr ? 'Sem descrição.' : 'No description.';
   String get originalLinkLabel =>
       isPtBr ? 'Link original' : 'Original link';
   String get driveFolderLabel =>
       isPtBr ? 'Pasta Drive' : 'Drive folder';
   String get playerOnlyWeb => isPtBr
-      ? 'Player de video disponivel apenas no Flutter Web.'
+      ? 'Player de vídeo disponível apenas no Flutter Web.'
       : 'Video player is only available on Flutter Web.';
   String get adminCatalogTitle =>
-      isPtBr ? 'Admin - Catalogo' : 'Admin - Catalog';
+      isPtBr ? 'Admin - Catálogo' : 'Admin - Catalog';
   String get restrictedAdminAccess => isPtBr
       ? 'Acesso restrito ao administrador.'
       : 'Access restricted to the administrator.';
   String get syncInfo => isPtBr
-      ? 'Ao salvar uma serie, o backend sincroniza a pasta do Google Drive, mapeia os videos em episodios e tenta preencher thumbnails automaticamente. Para forcar nova sincronizacao, edite e salve a serie novamente.'
+      ? 'Ao salvar uma série, o backend sincroniza a pasta do Google Drive, mapeia os vídeos em episódios e tenta preencher as thumbnails automaticamente. Para forçar uma nova sincronização, edite e salve a série novamente.'
       : 'When you save a series, the backend syncs the Google Drive folder, maps videos into episodes, and tries to populate thumbnails automatically. To force a new sync, edit and save the series again.';
-  String get seriesFormTitle => isPtBr ? 'Serie' : 'Series';
-  String get episodeFormTitle => isPtBr ? 'Episodio' : 'Episode';
-  String get registeredSeries => isPtBr ? 'Series cadastradas' : 'Added series';
+  String get seriesFormTitle => isPtBr ? 'Série' : 'Series';
+  String get episodeFormTitle => isPtBr ? 'Episódio' : 'Episode';
+  String get registeredSeries => isPtBr ? 'Séries cadastradas' : 'Added series';
   String get saveAndSync =>
       isPtBr ? 'Salvar e sincronizar' : 'Save and sync';
   String get saving => isPtBr ? 'Salvando...' : 'Saving...';
   String get clear => isPtBr ? 'Limpar' : 'Clear';
   String get saveEpisode =>
-      isPtBr ? 'Salvar episodio' : 'Save episode';
+      isPtBr ? 'Salvar episódio' : 'Save episode';
   String get seriesSaved => isPtBr
-      ? 'Serie salva. A sincronizacao da pasta do Drive sera executada no backend.'
+      ? 'Série salva. A sincronização da pasta do Drive será executada no backend.'
       : 'Series saved. The Drive folder sync will run on the backend.';
   String saveSeriesError(Object error) =>
-      isPtBr ? 'Erro ao salvar serie: $error' : 'Failed to save series: $error';
+      isPtBr ? 'Erro ao salvar série: $error' : 'Failed to save series: $error';
   String get videoSaved => isPtBr
-      ? 'Video salvo com sucesso.'
+      ? 'Vídeo salvo com sucesso.'
       : 'Video saved successfully.';
   String saveVideoError(Object error) =>
-      isPtBr ? 'Erro ao salvar video: $error' : 'Failed to save video: $error';
+      isPtBr ? 'Erro ao salvar vídeo: $error' : 'Failed to save video: $error';
   String get deleteSeriesTitle =>
-      isPtBr ? 'Excluir serie' : 'Delete series';
+      isPtBr ? 'Excluir série' : 'Delete series';
   String deleteSeriesPrompt(String title) => isPtBr
-      ? 'Deseja excluir "$title"? Todos os episodios sincronizados dessa serie tambem serao removidos.'
+      ? 'Deseja excluir "$title"? Todos os episódios sincronizados dessa série também serão removidos.'
       : 'Do you want to delete "$title"? All synced episodes from this series will also be removed.';
   String get cancel => isPtBr ? 'Cancelar' : 'Cancel';
   String get delete => isPtBr ? 'Excluir' : 'Delete';
   String get seriesDeleted => isPtBr
-      ? 'Serie excluida com sucesso.'
+      ? 'Série excluída com sucesso.'
       : 'Series deleted successfully.';
   String deleteSeriesError(Object error) => isPtBr
-      ? 'Erro ao excluir serie: $error'
+      ? 'Erro ao excluir série: $error'
       : 'Failed to delete series: $error';
-  String get editSeries => isPtBr ? 'Editar serie' : 'Edit series';
+  String get editSeries => isPtBr ? 'Editar série' : 'Edit series';
   String get deleteSeriesTooltip =>
-      isPtBr ? 'Excluir serie' : 'Delete series';
+      isPtBr ? 'Excluir série' : 'Delete series';
   String syncStatus(String status, String error) => isPtBr
       ? 'Status: $status${error.isEmpty ? '' : ' | $error'}'
       : 'Status: $status${error.isEmpty ? '' : ' | $error'}';
   String get noSyncedEpisodes => isPtBr
-      ? 'Nenhum episodio sincronizado ainda.'
+      ? 'Nenhum episódio sincronizado ainda.'
       : 'No synced episodes yet.';
   String get edit => isPtBr ? 'Editar' : 'Edit';
   String get seriesIdField =>
-      isPtBr ? 'ID da serie (deixe vazio para criar)' : 'Series ID (leave empty to create)';
+      isPtBr ? 'ID da série (deixe vazio para criar)' : 'Series ID (leave empty to create)';
   String get seriesTitleField =>
-      isPtBr ? 'Titulo da serie' : 'Series title';
+      isPtBr ? 'Título da série' : 'Series title';
   String get seriesDescriptionField =>
-      isPtBr ? 'Descricao da serie' : 'Series description';
+      isPtBr ? 'Descrição da série' : 'Series description';
   String get seriesFolderField => isPtBr
       ? 'Link da pasta Google Drive'
       : 'Google Drive folder link';
   String get seriesThumbField => isPtBr
-      ? 'Thumbnail da serie (opcional; se vazio, tenta usar a primeira thumb sincronizada)'
+      ? 'Thumbnail da série (opcional; se vazio, tenta usar a primeira thumb sincronizada)'
       : 'Series thumbnail (optional; if empty, tries to use the first synced thumbnail)';
   String get seriesIdRequiredField =>
-      isPtBr ? 'ID da serie' : 'Series ID';
+      isPtBr ? 'ID da série' : 'Series ID';
   String get videoIdField => isPtBr
-      ? 'ID do video (preenchido ao editar sincronizado)'
+      ? 'ID do vídeo (preenchido ao editar sincronizado)'
       : 'Video ID (filled when editing a synced item)';
   String get videoTitleField =>
-      isPtBr ? 'Titulo do video' : 'Video title';
+      isPtBr ? 'Título do vídeo' : 'Video title';
   String get videoDescriptionField =>
-      isPtBr ? 'Descricao do video' : 'Video description';
+      isPtBr ? 'Descrição do vídeo' : 'Video description';
   String get videoDriveField => isPtBr
       ? 'Link do arquivo no Google Drive'
       : 'Google Drive file link';
   String get episodeNumberField =>
-      isPtBr ? 'Numero do episodio' : 'Episode number';
+      isPtBr ? 'Número do episódio' : 'Episode number';
   String get videoThumbField => isPtBr
-      ? 'Thumbnail do video (opcional; se vazio, mantem a sincronizada)'
+      ? 'Thumbnail do vídeo (opcional; se vazio, mantém a sincronizada)'
       : 'Video thumbnail (optional; if empty, keeps the synced one)';
   String get requiredField =>
-      isPtBr ? 'Campo obrigatorio' : 'Required field';
+      isPtBr ? 'Campo obrigatório' : 'Required field';
   String get validNumber =>
-      isPtBr ? 'Informe um numero valido' : 'Enter a valid number';
+      isPtBr ? 'Informe um número válido' : 'Enter a valid number';
   String get languageLabel => isPtBr ? 'Idioma' : 'Language';
   String get portugueseLabel => 'PT-BR';
   String get englishLabel => 'EN';
   String get viewerAccessTitle =>
       isPtBr ? 'Acesso de espectadores' : 'Viewer access';
   String get viewerAccessDescription => isPtBr
-      ? 'Se a lista estiver vazia, qualquer usuario autenticado pode acessar o catalogo. Se houver emails cadastrados, apenas esses emails e o admin terao acesso.'
+      ? 'Se a lista estiver vazia, qualquer usuário autenticado pode acessar o catálogo. Se houver e-mails cadastrados, apenas esses e-mails e o admin terão acesso.'
       : 'If the list is empty, any signed-in user can access the catalog. If there are emails here, only those emails and the admin will have access.';
   String get viewerEmailField =>
-      isPtBr ? 'Email para liberar acesso' : 'Email to allow access';
-  String get addEmail => isPtBr ? 'Adicionar email' : 'Add email';
+      isPtBr ? 'E-mail para liberar acesso' : 'Email to allow access';
+  String get addEmail => isPtBr ? 'Adicionar e-mail' : 'Add email';
   String get invalidEmail =>
-      isPtBr ? 'Informe um email valido' : 'Enter a valid email';
+      isPtBr ? 'Informe um e-mail válido' : 'Enter a valid email';
   String get emailAdded =>
-      isPtBr ? 'Email adicionado com sucesso.' : 'Email added successfully.';
+      isPtBr ? 'E-mail adicionado com sucesso.' : 'Email added successfully.';
   String addEmailError(Object error) => isPtBr
-      ? 'Erro ao adicionar email: $error'
+      ? 'Erro ao adicionar e-mail: $error'
       : 'Failed to add email: $error';
   String get emailRemoved =>
-      isPtBr ? 'Email removido com sucesso.' : 'Email removed successfully.';
+      isPtBr ? 'E-mail removido com sucesso.' : 'Email removed successfully.';
   String removeEmailError(Object error) => isPtBr
-      ? 'Erro ao remover email: $error'
+      ? 'Erro ao remover e-mail: $error'
       : 'Failed to remove email: $error';
   String get noViewerRestrictions => isPtBr
-      ? 'Nenhum email restrito no momento.'
+      ? 'Nenhum e-mail restrito no momento.'
       : 'No email restrictions configured right now.';
   String get accessDeniedTitle =>
-      isPtBr ? 'Acesso nao autorizado' : 'Access not authorized';
+      isPtBr ? 'Acesso não autorizado' : 'Access not authorized';
   String get accessDeniedMessage => isPtBr
-      ? 'Sua conta Google nao esta liberada para assistir este catalogo.'
+      ? 'Sua conta Google não está liberada para assistir a este catálogo.'
       : 'Your Google account is not allowed to watch this catalog.';
   String get backToLogin =>
       isPtBr ? 'Voltar ao login' : 'Back to sign in';
